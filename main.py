@@ -35,16 +35,24 @@ def main(argv: List[str]):
     if not ran:
         print(f"Day {day} is missing a part1/part2 function")
 
+
 def run_day(module, day: int, part: int, is_test: bool):
-    name = f"part{part}"
-    try:
-        function = getattr(module, name)
-    except AttributeError:
+    lines_fn_name = f"part{part}_lines"
+    line_fn_name = f"part{part}"
+
+    lines_fn = getattr(module, lines_fn_name, None)
+    line_fn = getattr(module, line_fn_name, None)
+    if lines_fn is None and line_fn is None:
         return False
 
+    # Prefer lines_fn if given
+    function = lines_fn or line_fn
     inputs = get_inputs(day, part, function, is_test)
-    transformed_lines = (function(line) for line in inputs)
-    total = sum((l for l in transformed_lines if l is not None))
+    if lines_fn:
+        total = lines_fn(inputs)
+    else:
+        transformed_lines = (line_fn(line) for line in inputs)
+        total = sum((l for l in transformed_lines if l is not None))
 
     print(f"Day {part}:")
     print(total)
