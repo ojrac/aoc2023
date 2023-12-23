@@ -36,6 +36,15 @@ def main(argv: List[str]):
         print(f"Day {day} is missing a part1/part2 function")
 
 
+def transform_lines(inputs, line_fn):
+    for line in inputs:
+        try:
+            yield line_fn(line)
+        except:
+            print("Failed on line:")
+            print(line)
+            raise
+
 def run_day(module, day: int, part: int, is_test: bool):
     lines_fn_name = f"part{part}_lines"
     line_fn_name = f"part{part}"
@@ -51,8 +60,10 @@ def run_day(module, day: int, part: int, is_test: bool):
     if lines_fn:
         total = lines_fn(inputs)
     else:
-        transformed_lines = (line_fn(line) for line in inputs)
-        total = sum((l for l in transformed_lines if l is not None))
+        total = sum((
+            l
+            for l in transform_lines(inputs, line_fn)
+            if l is not None))
 
     print(f"Day {part}:")
     print(total)
