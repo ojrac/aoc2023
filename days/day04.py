@@ -1,3 +1,15 @@
+import re
+
+SPACES = re.compile(' +')
+
+def parse(line):
+    _, line = line.split(': ', 1)
+    winning, have = line.split(" | ")
+    def to_nums(s):
+        return [int(n) for n in SPACES.split(s) if n]
+
+    return to_nums(winning), to_nums(have)
+
 def part1(line):
     """
     Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
@@ -7,4 +19,9 @@ def part1(line):
     Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36
     Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
     """
-    return 0
+    winning, have = parse(line)
+    wins = sum((1 if h in winning else 0
+                for h in have))
+    if wins == 0:
+        return 0
+    return pow(2, wins - 1)
