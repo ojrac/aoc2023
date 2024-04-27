@@ -13,8 +13,9 @@ all non-None results will be summed together, or you can implement
 `part1_lines(lines)` which will be passed a generator of lines, and returns
 whatever you want to print for the part's result.
 
-If you put the sample input in a docstring for a part to use it as test input.
-(Don't worry about extra whitespace, it's trimmed before passing).
+Test input can be defined as a part's docstring, or shared by defining
+`TEST\_DATA` for the day. (Don't worry about extra whitespace, it's trimmed
+before passing).
 
 ## Example
 

@@ -56,7 +56,7 @@ def run_day(module, day: int, part: int, is_test: bool):
 
     # Prefer lines_fn if given
     function = lines_fn or line_fn
-    inputs = get_inputs(day, part, function, is_test)
+    inputs = get_inputs(day, part, function, module, is_test)
     if lines_fn:
         total = lines_fn(inputs)
     else:
@@ -88,18 +88,19 @@ def get_input_document_lines(day: int):
 
     return input_document.splitlines()
 
-def get_inputs(day: int, part: int, function, is_test: bool):
+def get_inputs(day: int, part: int, function, module, is_test: bool):
     if is_test:
-        input_lines = function.__doc__.splitlines()
+        # Docstring overrides module test data
+        input_str = function.__doc__ or getattr(module, "TEST_DATA", None)
+        assert input_str, "Set TEST_DATA or a part fn docstring"
+        input_lines = input_str.strip().splitlines()
     else:
         input_lines = get_input_document_lines(day)
 
-    lines = (
+    return (
         l.strip()
         for l in input_lines
     )
-    # Skip empty lines
-    return (l for l in lines if l)
 
 if __name__ == "__main__":
     main(sys.argv)
